@@ -13,26 +13,25 @@ Please install the following packages:
 - `batch-size`: number of images per batch
 - `image-size`: size of the image
 - `epochs`: number of training epochs
-- `evaluate`: evaluate model on validation set
-- `resume`: path to checkpoint
+- `HASH_TASK`: perform hash task
+- `IS_USE_MFB`: MFB structure has effect
+- `HASH_BIT`: How long is the generated hash code
 
-### VOC 2007
+### examples
+#### VOC 2007
 ```sh
 python demo_voc2007_gcn.py data/voc2007/ --image-size 448 --batch-size 32
---HASH_TASK --IS_USE_MFB --NORMED --IS_USE_IOU -t -v --linear_intermediate 358 --pooling_stride 2 --epochs 15
---threshold_p 0.15 --HASH_BIT 48
+--HASH_TASK --IS_USE_MFB --NORMED --IS_USE_IOU -t -v --epochs 15 -HASH_BIT 48
 ```
-### COCO
+#### COCO
 ```sh
 python demo_coco_gcn.py data/coco/ --image-size 448 --batch-size 32
---HASH_TASK --IS_USE_MFB --NORMED --IS_USE_IOU -t -v --linear_intermediate 358 --pooling_stride 2 --epochs 15
---threshold_p 0.15 --HASH_BIT 48
+--HASH_TASK --IS_USE_MFB --NORMED --IS_USE_IOU -t -v --epochs 15 --HASH_BIT 48
 ```
-### MIRFLICKR25k
+#### MIRFLICKR25k
 ```sh
 python demo_mirflickr25k_gcn.py data/mirflickr25k/ --image-size 448 --batch-size 32
---HASH_TASK --IS_USE_MFB --NORMED --IS_USE_IOU -t -v --linear_intermediate 358 --pooling_stride 2 --epochs 15
---threshold_p 0.15 --HASH_BIT 48
+--HASH_TASK --IS_USE_MFB --NORMED --IS_USE_IOU -t -v --epochs 15 --HASH_BIT 48
 ```
 
 
