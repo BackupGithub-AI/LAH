@@ -17,14 +17,14 @@
     - resume: path to checkpoint
 
 #### You can train the model with different dataset using these commands
-`
+```python
 python perform_task.py -H -p --datasetname voc
-`
-`
+```
+```python
 python perform_task.py -H -p --datasetname coco
-`
-`
+```
+```python
 python perform_task.py -H -p --datasetname mirflickr25k
-`
+```
 
 
