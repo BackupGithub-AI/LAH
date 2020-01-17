@@ -8,9 +8,9 @@ Please install the following packages:
 - torchnet-0.0.4
 
 ### Options
-- `lr`: learning rate
-- `lrp`: factor for learning rate of pretrained layers. The learning rate of the pretrained layers is lr * lrp
-- `batch-size`: number of images per batch
+- `H`: Hash task
+- `p`: if perform the command now
+- `datasetname`: the name of dataset
 - `image-size`: size of the image
 - `epochs`: number of training epochs
 - `evaluate`: evaluate model on validation set
