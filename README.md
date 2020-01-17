@@ -64,30 +64,11 @@ image-size: size of the image
 epochs: number of training epochs
 evaluate: evaluate model on validation set
 resume: path to checkpoint
-Demo VOC 2007
-python3 demo_voc2007_gcn.py data/voc --image-size 448 --batch-size 32 -e --resume checkpoint/voc/voc_checkpoint.pth.tar
-Demo COCO 2014
-python3 demo_coco_gcn.py data/coco --image-size 448 --batch-size 32 -e --resume checkpoint/coco/coco_checkpoint.pth.tar
-Citing this repository
-If you find this code useful in your research, please consider citing us:
 
->>>>>>> f8b365bfc408cc84742d7ac27185008ce653ac80
-@inproceedings{ML_GCN_CVPR_2019,
-author = {Zhao-Min, Chen and Xiu-Shen, Wei and Peng, Wang and Yanwen, Guo},
-title = {{Multi-Label Image Recognition with Graph Convolutional Networks}},
-booktitle = {The IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
-year = {2019}
-}
-<<<<<<< HEAD
-```
-## Reference
-This project is based on https://github.com/durandtibo/wildcat.pytorch
+python perform_task.py -H -p --datasetname voc
+or
+python perform_task.py -H -p --datasetname coco
+or
+python perform_task.py -H -p --datasetname mirflickr25k
 
-## Tips
-=======
-Reference
-This project is based on https://github.com/durandtibo/wildcat.pytorch
 
-Tips
->>>>>>> f8b365bfc408cc84742d7ac27185008ce653ac80
-If you have any questions about our work, please do not hesitate to contact us by emails.
