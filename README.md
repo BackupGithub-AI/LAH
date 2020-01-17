@@ -18,10 +18,16 @@ Please install the following packages:
 -resume: path to checkpoint
 
 You can train the model with these commands to different dataset
->>python perform_task.py -H -p --datasetname voc
+(```)
+python perform_task.py -H -p --datasetname voc
+(```)
 or
->>python perform_task.py -H -p --datasetname coco
+(```)
+python perform_task.py -H -p --datasetname coco
+(```)
 or
->>python perform_task.py -H -p --datasetname mirflickr25k
+(```)
+python perform_task.py -H -p --datasetname mirflickr25k
+(```)
 
 
