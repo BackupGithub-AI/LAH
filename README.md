@@ -8,9 +8,9 @@ Please install the following packages:
 - torchnet-0.0.4
 
 ### Options
-- `H`: Hash task
-- `p`: if perform the command now
-- `datasetname`: the name of dataset
+- `lr`: learning rate
+- `lrp`: factor for learning rate of pretrained layers. The learning rate of the pretrained layers is `lr * lrp`
+- `batch-size`: number of images per batch
 - `image-size`: size of the image
 - `epochs`: number of training epochs
 - `evaluate`: evaluate model on validation set
@@ -18,15 +18,21 @@ Please install the following packages:
 
 ### VOC 2007
 ```sh
-python perform_task.py -H -p --datasetname voc
+python demo_voc2007_gcn.py data/voc2007/ --image-size 448 --batch-size 32
+--HASH_TASK --IS_USE_MFB --NORMED --IS_USE_IOU -t -v --linear_intermediate 358 --pooling_stride 2 --epochs 15
+--threshold_p 0.15 --HASH_BIT 48
 ```
 ### COCO
 ```sh
-python perform_task.py -H -p --datasetname coco
+python demo_coco_gcn.py data/coco/ --image-size 448 --batch-size 32
+--HASH_TASK --IS_USE_MFB --NORMED --IS_USE_IOU -t -v --linear_intermediate 358 --pooling_stride 2 --epochs 15
+--threshold_p 0.15 --HASH_BIT 48
 ```
 ### MIRFLICKR25k
 ```sh
-python perform_task.py -H -p --datasetname mirflickr25k
+python demo_mirflickr25k_gcn.py data/mirflickr25k/ --image-size 448 --batch-size 32
+--HASH_TASK --IS_USE_MFB --NORMED --IS_USE_IOU -t -v --linear_intermediate 358 --pooling_stride 2 --epochs 15
+--threshold_p 0.15 --HASH_BIT 48
 ```
 
 
