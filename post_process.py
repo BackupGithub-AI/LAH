@@ -203,16 +203,13 @@ class PostPro(object):
 		R = shot / all_gt_match_num if all_gt_match_num else None
 		mAP1 = (mAP / shot) if shot else None  
 		mAP2 = (mAP / seq) if seq else None 
-		print("shot={0},all_gt_match_num={1}".format(shot, all_gt_match_num))
-		print("mAP/shot vlaue = {0},\nmAP/seq value = {1},\nPrecision = {2},\nRecall = {3}". \
-		      format(mAP1, mAP2, P, R))
+		
 		if mAP1:
 			self.mAP1_list.append(mAP1)
 		if mAP2:
 			self.mAP2_list.append(mAP2)
 			self.P_list.append(P)
 			self.R_list.append(R)
-		print()
 		
 		if mAP2 != None and mAP2 > self.state['threshold']:
 			cheat_dic = {  
@@ -233,7 +230,6 @@ class PostPro(object):
 			)
 	
 	def create_cheat_pkl(self):
-		print('create_cheat_pkl says:\n')
 		
 		self.state['cheat_hashcode_pool_image_name_list'].sort(key=lambda x: x[1], reverse=True)
 		self.state['query_pool_image_name_list'].sort(key=lambda x: x[1], reverse=True)
@@ -243,7 +239,6 @@ class PostPro(object):
 		self.state['query_pool_image_name_list'] = \
 			self.state['query_pool_image_name_list'][:self.state['query_pool_limit']]
 		
-		print("create_cheat_pkl says:\n")
 		for i in range(len(self.state['cheat_hashcode_pool_image_name_list'])):
 			content = self.state['cheat_hashcode_pool_image_name_list'][i]
 			tmp_dic = {'id': content[0],
@@ -251,8 +246,7 @@ class PostPro(object):
 			           'output': content[-1]['out'].cpu().char(),
 			           }
 			self._wbin_pkl(self.state['cheat_hashcode_pool'], tmp_dic)
-		print("cheat_pool content output over...\n\n")
-		print('print query_pool content\n')
+		
 		for i in range(len(self.state['query_pool_image_name_list'])):
 			content = self.state['query_pool_image_name_list'][i]
 			tmp_dic = {'id': content[0],
@@ -262,8 +256,6 @@ class PostPro(object):
 			self._wbin_pkl(self.state['query_pool'], tmp_dic)
 	
 	def cheat_stack_tensor(self, ):
-		print("cheat_stack_tensor says:\n")
-		print("processing the file named {0}".format(self.state['cheat_hashcode_pool']))
 		if os.path.exists(self.state['cheat_hashcode_pool']):
 			u = 0
 			with open(self.state['cheat_hashcode_pool'], 'rb') as f:
@@ -283,7 +275,6 @@ class PostPro(object):
 						break
 					u += 1 
 			self.all_cheat_item = u
-			print("item count = ", self.all_cheat_item)
 		else:
 			print("cannot find the file named {0}\n Processing aborting... ...\n".
 			      format(self.state['cheat_hashcode_pool']))
@@ -337,9 +328,7 @@ class PostPro(object):
 		R = shot / all_gt_match_num if all_gt_match_num else None
 		mAP1 = (mAP / shot) if shot else None  
 		mAP2 = (mAP / seq) if seq else None  
-		print("shot={0},all_gt_match_num={1}".format(shot, all_gt_match_num))
-		print("mAP/shot vlaue = {0},\nmAP/seq value = {1},\nPrecision = {2},\nRecall = {3}". \
-		      format(mAP1, mAP2, P, R))
+		
 		if mAP1:
 			self.mAP1_list.append(mAP1)
 		if mAP2:
@@ -349,7 +338,6 @@ class PostPro(object):
 		print()
 	
 	def read_format(self):
-		print('self.state["before_fc_destination"] = ',self.state['before_fc_destination'])
 		if os.path.exists(self.state['before_fc_destination']):
 			u = 0
 			with open(self.state['before_fc_destination'], 'rb') as f:
@@ -369,8 +357,6 @@ class PostPro(object):
 						self.all_item += len(name)
 					except EOFError:
 						break
-			print('self.bf_output shape={0}, \ncontent=\n{1}'.format(self.bf_output.shape, self.bf_output))
-			print('self.bf_target shape={0}, \ncontent=\n{1}'.format(self.bf_targets.shape, self.bf_targets))
 	
 	def test_cheat(self):
 		print('Start test cheating hash pool...')
@@ -381,13 +367,8 @@ class PostPro(object):
 			iteration = tqdm(range(self.all_cheat_item), desc='CheatTest')
 			for i in iteration:
 				self.cheat_calc(i)
-			print()
-			print("*" * 10, 'Cheat overall mean mAP1={0}'.format(self.calc_mean_var(self.mAP1_list)[0]), '*' * 10, '\n')
-			print("*" * 10, 'Cheat overall mean mAP2={0}'.format(self.calc_mean_var(self.mAP2_list)[0]), '*' * 10, '\n')
-			print("*" * 10, 'Cheat overall mean P={0}'.format(self.calc_mean_var(self.P_list)[0]), '*' * 10, '\n')
-			print("*" * 10, 'Cheat overall mean R={0}'.format(self.calc_mean_var(self.R_list)[0]), '*' * 10, '\n')
 		else:
-			print('Cheat pool have no value')
+			print('This pool have no value')
 	
 	def select_img(self):
 		print('Start select hash code...')
@@ -401,20 +382,8 @@ class PostPro(object):
 		iteration = tqdm(range(self.all_item), desc='OriginTest')
 		for i in iteration:
 			self.createSeveralMat(i)
-		print()
-		print("*" * 10, 'Original overall mean mAP1={0}'.format(self.calc_mean_var(self.mAP1_list)[0]), '*' * 10, '\n')
-		print("*" * 10, 'Original overall mean mAP2={0}'.format(self.calc_mean_var(self.mAP2_list)[0]), '*' * 10, '\n')
-		print("*" * 10, 'Original overall mean P={0}'.format(self.calc_mean_var(self.P_list)[0]), '*' * 10, '\n')
-		print("*" * 10, 'Original overall mean R={0}'.format(self.calc_mean_var(self.R_list)[0]), '*' * 10, '\n')
 		self.create_cheat_pkl()
 	
-	@property
-	def display(self, ):
-		for k, v in self.state.items():
-			print("{0}={1}".format(k, v))
-		print("all_cheat_item={0}".format(self.all_cheat_item))
-		print("all_item={0}".format(self.all_item))
-
 	def read_bf_info(self):
 		self.reset()
 		self.read_format()
