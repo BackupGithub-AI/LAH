@@ -89,10 +89,6 @@ def main_mirflickr25k():
 	state['normed'] = args.NORMED
 	state['start_time'] = datetime.datetime.now().strftime('%Y%m%d%H%M')
 	state['device_ids'] = [int(i) for i in range(torch.cuda.device_count())]
-	print('*****************The config parameters:*******************')
-	for k, v in state.items():
-		print("{0} = {1}".format(k, v))
-	print("\n*****************config parameters print end*******************\n")
 	if state['run_training']:
 		print("START TRAINING PROCESS...\n")
 		train_dataset = MirFlickr25kPreProcessing(args.data, 'train', inp_name=args.word2vec_file)
@@ -126,7 +122,7 @@ def main_mirflickr25k():
 		print("START VALIDATION PROCESS...\n")
 		testobj = PostPro(state)
 		testobj.select_img()
-		testobj.test_cheat()
+		testobj.test_final()
 
 
 if __name__ == '__main__':

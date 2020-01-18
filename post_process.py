@@ -7,7 +7,7 @@ class PostPro(object):
 	def __init__(self, state={}):
 		super(PostPro, self).__init__()
 		self.state = state
-		self.all_cheat_item = 0
+		self.all_final_item = 0
 		
 		if self._state('use_gpu') is None:
 			self.state['use_gpu'] = torch.cuda.is_available()
@@ -16,9 +16,9 @@ class PostPro(object):
 			tmp = self.state['hashcode_pool'].split('/')[:-1]
 			self.state['prefix_path'] = '/'.join(tmp) + '/'
 		
-		if self._state('cheat_hashcode_pool') is None:
-			self.state['cheat_hashcode_pool'] = self.state['prefix_path'] + \
-			                                    "cheat_" + self.state['hashcode_pool'].split('/')[-1]
+		if self._state('final_hashcode_pool') is None:
+			self.state['final_hashcode_pool'] = self.state['prefix_path'] + \
+			                                    "final_" + self.state['hashcode_pool'].split('/')[-1]
 			
 		if self._state('before_fc_destination') is None:
 			self.state['before_fc_destination'] = ''
@@ -26,8 +26,8 @@ class PostPro(object):
 		if self._state('hashcode_pool_image_name_list') is None:
 			self.state['hashcode_pool_image_name_list'] = []
 		
-		if self._state('cheat_hashcode_pool_image_name_list') is None:
-			self.state['cheat_hashcode_pool_image_name_list'] = []
+		if self._state('final_hashcode_pool_image_name_list') is None:
+			self.state['final_hashcode_pool_image_name_list'] = []
 		
 		if self._state('query_pool_image_name_list') is None:
 			self.state['query_pool_image_name_list'] = []
@@ -92,7 +92,7 @@ class PostPro(object):
 			self.bf_output = torch.FloatTensor(torch.FloatStorage())
 			self.bf_targets = torch.IntTensor(torch.IntStorage())
 		self.all_item = 0
-		self.all_cheat_item = 0
+		self.all_final_item = 0
 		self.mAP1_list = []
 		self.mAP2_list = []
 		self.P_list = []
@@ -100,14 +100,14 @@ class PostPro(object):
 	
 	def init_variables(self):
 		self.state['query_pool_image_name_list'] = []
-		self.state['cheat_hashcode_pool_image_name_list'] = []
+		self.state['final_hashcode_pool_image_name_list'] = []
 		self.state['hashcode_pool_image_name_list'] = []
 		self.state['hashcode_pool'] = os.path.splitext(self.state['hashcode_pool'])[0] + "_hb" + str(
 			self.state['hash_bit']) + '_' + self.state['start_time'] + '.pkl'
 		self.state['query_pool'] = os.path.splitext(self.state['query_pkl_path'])[0] + "_hb" + str(
 			self.state['hash_bit']) + '_' + self.state['start_time'] + '.pkl'
-		self.state['cheat_hashcode_pool'] = self.state['prefix_path'] + \
-		                                    "cheat_" + self.state['hashcode_pool'].split('/')[-1]
+		self.state['final_hashcode_pool'] = self.state['prefix_path'] + \
+		                                    "final_" + self.state['hashcode_pool'].split('/')[-1]
 		self.state['before_fc_destination'] = self.state['hashcode_pool'][:-4] + 'before_fc.pkl'
 	
 	def _gpu_cpu(self, input):
@@ -212,12 +212,12 @@ class PostPro(object):
 			self.R_list.append(R)
 		
 		if mAP2 != None and mAP2 > self.state['threshold']:
-			cheat_dic = {  
+			final_dic = {
 				'gt': self.targets[query_num, :].char(),
 				'out': self.output[query_num, :].char(),
 			}
-			self.state['cheat_hashcode_pool_image_name_list'].append(
-				(self.state['hashcode_pool_image_name_list'][query_num], mAP2, P, R, cheat_dic)
+			self.state['final_hashcode_pool_image_name_list'].append(
+				(self.state['hashcode_pool_image_name_list'][query_num], mAP2, P, R, final_dic)
 			)
 		
 		if mAP2 != None and mAP2 > 0.7:
@@ -229,23 +229,23 @@ class PostPro(object):
 				(self.state['hashcode_pool_image_name_list'][query_num], mAP2, P, R, query_dic)
 			)
 	
-	def create_cheat_pkl(self):
+	def create_final_pkl(self):
 		
-		self.state['cheat_hashcode_pool_image_name_list'].sort(key=lambda x: x[1], reverse=True)
+		self.state['final_hashcode_pool_image_name_list'].sort(key=lambda x: x[1], reverse=True)
 		self.state['query_pool_image_name_list'].sort(key=lambda x: x[1], reverse=True)
 		
-		self.state['cheat_hashcode_pool_image_name_list'] = \
-			self.state['cheat_hashcode_pool_image_name_list'][:self.state['hashcode_pool_limit']]
+		self.state['final_hashcode_pool_image_name_list'] = \
+			self.state['final_hashcode_pool_image_name_list'][:self.state['hashcode_pool_limit']]
 		self.state['query_pool_image_name_list'] = \
 			self.state['query_pool_image_name_list'][:self.state['query_pool_limit']]
 		
-		for i in range(len(self.state['cheat_hashcode_pool_image_name_list'])):
-			content = self.state['cheat_hashcode_pool_image_name_list'][i]
+		for i in range(len(self.state['final_hashcode_pool_image_name_list'])):
+			content = self.state['final_hashcode_pool_image_name_list'][i]
 			tmp_dic = {'id': content[0],
 			           'target_01': content[-1]['gt'].cpu().char(),
 			           'output': content[-1]['out'].cpu().char(),
 			           }
-			self._wbin_pkl(self.state['cheat_hashcode_pool'], tmp_dic)
+			self._wbin_pkl(self.state['final_hashcode_pool'], tmp_dic)
 		
 		for i in range(len(self.state['query_pool_image_name_list'])):
 			content = self.state['query_pool_image_name_list'][i]
@@ -255,10 +255,10 @@ class PostPro(object):
 			           }
 			self._wbin_pkl(self.state['query_pool'], tmp_dic)
 	
-	def cheat_stack_tensor(self, ):
-		if os.path.exists(self.state['cheat_hashcode_pool']):
+	def final_stack_tensor(self, ):
+		if os.path.exists(self.state['final_hashcode_pool']):
 			u = 0
-			with open(self.state['cheat_hashcode_pool'], 'rb') as f:
+			with open(self.state['final_hashcode_pool'], 'rb') as f:
 				while True:
 					try:
 						data = pickle.load(f)
@@ -274,14 +274,14 @@ class PostPro(object):
 					except EOFError:
 						break
 					u += 1 
-			self.all_cheat_item = u
+			self.all_final_item = u
 		else:
 			print("cannot find the file named {0}\n Processing aborting... ...\n".
-			      format(self.state['cheat_hashcode_pool']))
+			      format(self.state['final_hashcode_pool']))
 			sys.exit()
 	
 	
-	def cheat_calc(self, query_num):
+	def final_calc(self, query_num):
 		query_code = self.output[query_num, :]
 		query_label = self.targets[query_num, :]
 		
@@ -358,31 +358,27 @@ class PostPro(object):
 					except EOFError:
 						break
 	
-	def test_cheat(self):
-		print('Start test cheating hash pool...')
-		print()
+	def test_final(self):
 		self.reset()
-		self.cheat_stack_tensor()
-		if self.all_cheat_item:
-			iteration = tqdm(range(self.all_cheat_item), desc='CheatTest')
+		self.final_stack_tensor()
+		if self.all_final_item:
+			iteration = tqdm(range(self.all_final_item), desc='FinalTest')
 			for i in iteration:
-				self.cheat_calc(i)
+				self.final_calc(i)
 		else:
 			print('This pool have no value')
 	
 	def select_img(self):
-		print('Start select hash code...')
-		print()
 		self.reset()
 		self.stack_from_src()
-		if os.path.exists(self.state['cheat_hashcode_pool']):
-			os.remove(self.state['cheat_hashcode_pool'])
+		if os.path.exists(self.state['final_hashcode_pool']):
+			os.remove(self.state['final_hashcode_pool'])
 		if os.path.exists(self.state['query_pool']):
 			os.remove(self.state['query_pool'])
 		iteration = tqdm(range(self.all_item), desc='OriginTest')
 		for i in iteration:
 			self.createSeveralMat(i)
-		self.create_cheat_pkl()
+		self.creat_final_pkl()
 	
 	def read_bf_info(self):
 		self.reset()

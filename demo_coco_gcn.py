@@ -125,7 +125,7 @@ def main_coco():
 		print("START VALIDATION PROCESS...\n")
 		testobj = PostPro(state)
 		testobj.select_img()
-		testobj.test_cheat()
+		testobj.test_final()
 
 
 if __name__ == '__main__':
