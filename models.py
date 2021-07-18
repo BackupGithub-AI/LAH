@@ -139,9 +139,6 @@ class GCNResnet(nn.Module):
 			if gl.LOCAL_USE_TANH:
 				hash_code_out[hash_code_out > 0] = 1
 				hash_code_out[hash_code_out <= 0] = -1
-				hash_code_out = hash_code_out
-			else:
-				hash_code_out = hash_tmp
 			return hash_code_out
 		
 		return x_out
