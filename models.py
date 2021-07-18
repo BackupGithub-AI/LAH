@@ -135,8 +135,8 @@ class GCNResnet(nn.Module):
 		
 		if self.is_hash:
 			hash_tmp = self.hash_layer(x_out)
+			hash_code_out = self.use_tanh(hash_tmp)
 			if gl.LOCAL_USE_TANH:
-				hash_code_out = self.use_tanh(hash_tmp)
 				hash_code_out[hash_code_out > 0] = 1
 				hash_code_out[hash_code_out <= 0] = -1
 				hash_code_out = hash_code_out
